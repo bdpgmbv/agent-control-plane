@@ -1,0 +1,30 @@
+# Virtual environments - each project builds its own
+.venv/
+venv/
+
+# Secrets. .env.example is committed; .env never is.
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Runtime state
+data/
+workspaces/
+eval_results/
+*.db
+*.sqlite3
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
