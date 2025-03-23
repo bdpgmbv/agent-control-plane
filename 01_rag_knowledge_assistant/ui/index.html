@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG Knowledge Assistant</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-number">01</span>
+    <div>
+      <h1>RAG Knowledge Assistant</h1>
+      <p class="brand-sub">Hybrid retrieval &middot; reranking &middot; enforced citations &middot; honest refusal</p>
+    </div>
+  </div>
+
+  <div class="status-strip" id="statusStrip">
+    <span class="pill pill-loading" id="modePill">checking...</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab tab-active" data-panel="panelAsk">Ask</button>
+  <button class="tab" data-panel="panelDocuments">Documents</button>
+  <button class="tab" data-panel="panelDebug">Retrieval debug</button>
+  <button class="tab" data-panel="panelMetrics">Metrics</button>
+  <button class="tab" data-panel="panelEval">Evaluation</button>
+</nav>
+
+<main>
+
+  <!-- ================= ASK ================= -->
+  <section id="panelAsk" class="panel panel-active">
+    <div class="two-column">
+      <div>
+        <div class="card">
+          <div class="card-head">
+            <h2>Ask a question</h2>
+            <label class="who">
+              Acting as
+              <select id="apiKeySelect">
+                <option value="demo-admin-key">admin &mdash; sees public + internal + secret</option>
+                <option value="demo-user-key">user &mdash; sees public only</option>
+              </select>
+            </label>
+          </div>
+
+          <textarea id="questionInput" rows="3"
+            placeholder="How long do I have to ask for a refund?"></textarea>
+
+          <div class="controls">
+            <label class="check"><input type="checkbox" id="streamToggle" checked> stream the answer</label>
+            <label class="check"><input type="checkbox" id="cacheToggle" checked> use cache</label>
+            <button class="primary" id="askButton">Ask</button>
+          </div>
+
+          <div class="samples">
+            <span>Try:</span>
+            <button class="chip" data-q="How long do I have to ask for a refund?">refund window</button>
+            <button class="chip" data-q="can i get my money back a month after it arrived?">same, paraphrased</button>
+            <button class="chip" data-q="What does express delivery cost?">exact number</button>
+            <button class="chip" data-q="What does a level three engineer earn?">secret document</button>
+            <button class="chip" data-q="Who won the football world cup in 1998?">not in the knowledge base</button>
+          </div>
+        </div>
+
+        <div class="card" id="answerCard" hidden>
+          <div class="card-head">
+            <h2>Answer</h2>
+            <div class="badges" id="answerBadges"></div>
+          </div>
+          <div class="answer-body" id="answerBody"></div>
+
+          <div id="abstainBox" class="abstain-box" hidden></div>
+
+          <h3 class="section-title">Sources the answer used</h3>
+          <div id="citationList" class="citation-list"></div>
+
+          <details class="trace">
+            <summary>Retrieval trace &mdash; what happened at every stage</summary>
+            <div id="traceBody"></div>
+          </details>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card explain">
+          <h3>What happens when you press Ask</h3>
+          <ol class="pipeline">
+            <li><b>Cache</b> &mdash; exact match, then near-duplicate wording</li>
+            <li><b>Rewrite</b> &mdash; the question becomes several search queries</li>
+            <li><b>Vector search</b> &mdash; passages with the same <i>meaning</i></li>
+            <li><b>Keyword search</b> &mdash; passages with the same <i>words</i> (BM25)</li>
+            <li><b>Fuse</b> &mdash; combine both lists by rank position</li>
+            <li><b>Rerank</b> &mdash; score each candidate for absolute relevance</li>
+            <li><b>Threshold</b> &mdash; drop weak passages; if none survive, refuse</li>
+            <li><b>Generate</b> &mdash; answer using only those passages</li>
+            <li><b>Verify</b> &mdash; check citations are real and every sentence is supported</li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= DOCUMENTS ================= -->
+  <section id="panelDocuments" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Knowledge base</h2>
+        <div>
+          <button class="primary" id="seedButton">Load the 4 sample documents</button>
+          <button class="danger" id="resetButton">Empty</button>
+        </div>
+      </div>
+      <p class="hint">
+        The samples are tagged on purpose: refunds and shipping are <b>public</b>,
+        the security FAQ is <b>internal</b>, salary bands are <b>secret</b>.
+        Switch to the user key on the Ask tab and watch the secret one become invisible.
+      </p>
+      <div id="documentList" class="doc-list">loading...</div>
+    </div>
+
+    <div class="two-column">
+      <div class="card">
+        <h2>Add text</h2>
+        <input type="text" id="docTitle" placeholder="Title, e.g. Warranty Policy">
+        <textarea id="docText" rows="8" placeholder="Paste the document text here. Use # headings so it chunks by section."></textarea>
+        <div class="controls">
+          <label class="who">Access tag
+            <select id="docTag">
+              <option value="public">public</option>
+              <option value="internal">internal</option>
+              <option value="secret">secret</option>
+            </select>
+          </label>
+          <button class="primary" id="addTextButton">Add document</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Upload a file</h2>
+        <p class="hint">.txt, .md, .pdf or .html</p>
+        <input type="file" id="fileInput" accept=".txt,.md,.markdown,.pdf,.html,.htm">
+        <div class="controls">
+          <label class="who">Access tag
+            <select id="fileTag">
+              <option value="public">public</option>
+              <option value="internal">internal</option>
+              <option value="secret">secret</option>
+            </select>
+          </label>
+          <button class="primary" id="uploadButton">Upload</button>
+        </div>
+        <div id="uploadResult" class="result-box" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RETRIEVAL DEBUG ================= -->
+  <section id="panelDebug" class="panel">
+    <div class="card">
+      <h2>Retrieval debug</h2>
+      <p class="hint">
+        Retrieval only, no answer generated. When an answer is wrong this is the
+        first place to look: did the right passage get retrieved at all?
+      </p>
+      <div class="controls">
+        <input type="text" id="debugQuestion" placeholder="What encryption is used for stored customer data?">
+        <button class="primary" id="debugButton">Retrieve</button>
+      </div>
+      <div id="debugResult"></div>
+    </div>
+  </section>
+
+  <!-- ================= METRICS ================= -->
+  <section id="panelMetrics" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Live metrics</h2>
+        <button id="refreshMetrics">Refresh</button>
+      </div>
+      <p class="hint">Measured since the server started. These are the numbers a production team watches.</p>
+      <div id="metricCards" class="metric-grid"></div>
+      <details class="trace"><summary>Raw metrics JSON</summary><pre id="metricsRaw"></pre></details>
+    </div>
+  </section>
+
+  <!-- ================= EVALUATION ================= -->
+  <section id="panelEval" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Evaluation suite</h2>
+        <div>
+          <label class="check"><input type="checkbox" id="judgeToggle"> also use the model as a judge</label>
+          <button class="primary" id="runEvalButton">Run evaluation</button>
+        </div>
+      </div>
+      <p class="hint">
+        16 hand-written questions, including 3 that <b>must</b> be refused and 2 that
+        test access control. Retrieval is scored separately from answering, because
+        they fail for different reasons and have different fixes.
+      </p>
+      <div id="evalStatus"></div>
+      <div id="evalSummary"></div>
+      <div id="evalCases"></div>
+    </div>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
