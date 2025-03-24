@@ -1,0 +1,141 @@
+{
+  "description": "Hand-written test questions for the four sample documents. This is the most valuable file in the project: without it, 'I improved retrieval' is an opinion.",
+  "how_to_extend": "Add a case for every real question that the system got wrong. A golden set grows out of your bug reports, not out of your imagination.",
+  "cases": [
+    {
+      "id": "refund-window",
+      "question": "How long do I have to ask for a refund?",
+      "relevant_sources": ["refund_policy.md"],
+      "must_contain": ["30 days"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"],
+      "note": "Direct lookup. If this fails, something is badly broken."
+    },
+    {
+      "id": "refund-window-paraphrased",
+      "question": "can i get my money back a month after it arrived?",
+      "relevant_sources": ["refund_policy.md"],
+      "must_contain": ["30 days"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"],
+      "note": "Same fact, none of the document's vocabulary. This is what query rewriting is for."
+    },
+    {
+      "id": "refund-payment-method",
+      "question": "Can a refund go to a different card?",
+      "relevant_sources": ["refund_policy.md"],
+      "must_contain": ["original payment method|original card|different card"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "refund-timing",
+      "question": "How many business days until a refund shows on my statement?",
+      "relevant_sources": ["refund_policy.md"],
+      "must_contain": ["5 to 10"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "non-refundable",
+      "question": "Are gift cards refundable?",
+      "relevant_sources": ["refund_policy.md"],
+      "must_contain": ["not refundable"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "express-cost",
+      "question": "What does express delivery cost?",
+      "relevant_sources": ["shipping_policy.md"],
+      "must_contain": ["12.99"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"],
+      "note": "An exact number. Vector search alone often misses these, keyword search catches them."
+    },
+    {
+      "id": "free-shipping-threshold",
+      "question": "When is standard shipping free?",
+      "relevant_sources": ["shipping_policy.md"],
+      "must_contain": ["50 dollars"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "lost-parcel",
+      "question": "What happens if my parcel never turns up?",
+      "relevant_sources": ["shipping_policy.md"],
+      "must_contain": ["10 working days"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "customs-duty",
+      "question": "Who pays import taxes on an international order?",
+      "relevant_sources": ["shipping_policy.md"],
+      "must_contain": ["customer"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "encryption-standard",
+      "question": "What encryption is used for stored customer data?",
+      "relevant_sources": ["security_faq.md"],
+      "must_contain": ["AES-256"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "chat-retention",
+      "question": "How long are support chat transcripts kept?",
+      "relevant_sources": ["security_faq.md"],
+      "must_contain": ["18 months"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "breach-notification",
+      "question": "How quickly are customers told about a data breach?",
+      "relevant_sources": ["security_faq.md"],
+      "must_contain": ["72 hours"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal"]
+    },
+    {
+      "id": "secret-salary-hidden-from-user",
+      "question": "What does a level three engineer earn?",
+      "relevant_sources": [],
+      "must_contain": [],
+      "should_abstain": true,
+      "caller_tags": ["public"],
+      "note": "ACCESS CONTROL TEST. The answer exists in salary_bands.md, tagged secret. A public-only key must be told nothing - not even that the document exists."
+    },
+    {
+      "id": "secret-salary-visible-to-admin",
+      "question": "What does a level three engineer earn?",
+      "relevant_sources": ["salary_bands.md"],
+      "must_contain": ["120000"],
+      "should_abstain": false,
+      "caller_tags": ["public", "internal", "secret"],
+      "note": "The same question with a key that may read secret documents. Confirms the filter is permission-based, not a blanket block."
+    },
+    {
+      "id": "not-in-corpus-football",
+      "question": "Who won the football world cup in 1998?",
+      "relevant_sources": [],
+      "must_contain": [],
+      "should_abstain": true,
+      "caller_tags": ["public", "internal"],
+      "note": "HALLUCINATION TEST. A model knows this. The system must still refuse, because the knowledge base does not."
+    },
+    {
+      "id": "not-in-corpus-plausible",
+      "question": "What is the company's parental leave policy?",
+      "relevant_sources": [],
+      "must_contain": [],
+      "should_abstain": true,
+      "caller_tags": ["public", "internal", "secret"],
+      "note": "The hard abstention case: it sounds exactly like something that would be in a policy knowledge base, so retrieval will return confident-looking near misses."
+    }
+  ]
+}
