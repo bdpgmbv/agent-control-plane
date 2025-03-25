@@ -1,0 +1,27 @@
+services:
+  rag-assistant:
+    build: .
+    image: rag-assistant:1.0.0
+    ports:
+      - "8010:8010"
+    environment:
+      # Nothing secret is baked into the image. Without a key the service still
+      # runs - every project in this series works offline.
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      HOST: "0.0.0.0"
+      PORT: "8010"
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      # State outlives the container; source does not go in.
+      - rag-assistant-data:/srv/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8010/api/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  rag-assistant-data:
