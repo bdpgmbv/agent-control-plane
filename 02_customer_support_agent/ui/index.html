@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Customer Support Agent</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-number">02</span>
+    <div>
+      <h1>AI Customer Support Agent</h1>
+      <p class="brand-sub">tool calling &middot; permissions &middot; idempotency &middot; human approval &middot; audit</p>
+    </div>
+  </div>
+  <div class="status-strip" id="statusStrip">
+    <span class="pill pill-loading">checking...</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab tab-active" data-panel="panelChat">Chat</button>
+  <button class="tab" data-panel="panelApprovals">Approvals <span class="badge-count" id="approvalCount">0</span></button>
+  <button class="tab" data-panel="panelTickets">Tickets</button>
+  <button class="tab" data-panel="panelAudit">Audit log</button>
+  <button class="tab" data-panel="panelTools">Tools</button>
+  <button class="tab" data-panel="panelMetrics">Metrics</button>
+</nav>
+
+<main>
+
+  <!-- ================= CHAT ================= -->
+  <section id="panelChat" class="panel panel-active">
+    <div class="chat-layout">
+
+      <div class="card chat-card">
+        <div class="card-head">
+          <h2>Conversation</h2>
+          <div class="head-controls">
+            <label class="who">
+              Signed in as
+              <select id="identitySelect">
+                <option value="cust-alice-key">Alice Nwosu (customer)</option>
+                <option value="cust-bob-key">Bob Fernandez (customer)</option>
+                <option value="human-agent-key">Support staff (can approve)</option>
+              </select>
+            </label>
+            <button id="newConversationButton">New conversation</button>
+          </div>
+        </div>
+
+        <div id="chatWindow" class="chat-window">
+          <div class="chat-empty">
+            Ask about an order, a refund or a policy. Try one of the examples below.
+          </div>
+        </div>
+
+        <div class="composer">
+          <input type="text" id="messageInput" placeholder="Where is my order ORD-10023?" autocomplete="off">
+          <button class="primary" id="sendButton">Send</button>
+        </div>
+
+        <div class="samples">
+          <span>Try:</span>
+          <button class="chip" data-q="Where is my order ORD-10023?">order status</button>
+          <button class="chip" data-q="What is your refund policy?">policy question</button>
+          <button class="chip" data-q="I want a refund for ORD-10024, it arrived faulty">small refund</button>
+          <button class="chip" data-q="I want a refund for ORD-10025, the espresso machine is broken">refund needing approval</button>
+          <button class="chip" data-q="Where is my order ORD-20001?">someone else's order</button>
+          <button class="chip" data-q="My email is alice@example.com and my card 4532015112830366 was charged twice">message with personal data</button>
+          <button class="chip" data-q="This is ridiculous, let me speak to a human">ask for a human</button>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card explain">
+          <h3>What happens to each message</h3>
+          <ol class="pipeline">
+            <li><b>Redact</b> &mdash; personal data removed before anything is logged</li>
+            <li><b>Classify</b> &mdash; the intent decides which tools exist this turn</li>
+            <li><b>Escalate?</b> &mdash; asked for a human, abuse, or going in circles</li>
+            <li><b>Tool loop</b> &mdash; model asks for a tool, tool runs, result goes back</li>
+            <li><b>Each tool call</b> &mdash; permission, validation, idempotency, retries, audit</li>
+            <li><b>Escalate?</b> &mdash; needs approval, or the agent got nowhere</li>
+          </ol>
+          <h3>Try this</h3>
+          <p class="hint">
+            Send the same refund request twice. The second one replays the first
+            result instead of paying again &mdash; look for the <b>replayed</b> tag
+            on the tool chip.
+          </p>
+        </div>
+
+        <div class="card" id="turnDetailCard" hidden>
+          <h3 style="margin-top:0">Last turn</h3>
+          <div id="turnDetail"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= APPROVALS ================= -->
+  <section id="panelApprovals" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Approval queue</h2>
+        <button id="refreshApprovals">Refresh</button>
+      </div>
+      <p class="hint">
+        Actions the agent held because they are above the automatic limit. Sign in
+        as <b>Support staff</b> to decide them. Approving re-runs the action from
+        the top with every other check still in force &mdash; it does not just mark
+        it done.
+      </p>
+      <div id="approvalList">loading...</div>
+    </div>
+  </section>
+
+  <!-- ================= TICKETS ================= -->
+  <section id="panelTickets" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Tickets</h2>
+        <button id="refreshTickets">Refresh</button>
+      </div>
+      <p class="hint">Every escalation creates one. An escalation with no ticket is just the agent saying "someone will help you" to nobody.</p>
+      <div id="ticketList">loading...</div>
+    </div>
+  </section>
+
+  <!-- ================= AUDIT ================= -->
+  <section id="panelAudit" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Audit log</h2>
+        <button id="refreshAudit">Refresh</button>
+      </div>
+      <p class="hint">
+        Every tool call, allowed or refused, with personal data already removed.
+        Refusals matter most &mdash; look for <b>cross_customer_access_attempt</b>
+        after asking about someone else's order. Support staff only.
+      </p>
+      <div id="auditList">loading...</div>
+    </div>
+  </section>
+
+  <!-- ================= TOOLS ================= -->
+  <section id="panelTools" class="panel">
+    <div class="card">
+      <h2>Tools the agent has</h2>
+      <p class="hint">
+        The risk level decides who may run it and whether a human has to approve
+        first. Getting these right is most of the work in a safe agent.
+      </p>
+      <div id="toolList">loading...</div>
+    </div>
+  </section>
+
+  <!-- ================= METRICS ================= -->
+  <section id="panelMetrics" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Live metrics</h2>
+        <div>
+          <button id="refreshMetrics">Refresh</button>
+          <button class="danger" id="resetDemoButton">Reset the demo</button>
+        </div>
+      </div>
+      <p class="hint">Since the server started. Escalation rate is the one to watch: zero means the agent never hands over, very high means it solves nothing.</p>
+      <div id="metricCards" class="metric-grid"></div>
+      <details class="trace"><summary>Raw metrics JSON</summary><pre id="metricsRaw"></pre></details>
+    </div>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
