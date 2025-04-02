@@ -1,0 +1,215 @@
+{
+  "note": "A small research corpus, built so the interesting parts of the system have something to do. It contains deliberate duplicates (the same study reported twice), deliberate conflicts (studies with different figures), a spread of source credibility, a low-credibility outlier, and documents that are simply irrelevant.",
+  "documents": [
+    {
+      "document_id": "DOC-001",
+      "title": "Outcomes of a six-month four-day week trial across 61 organisations",
+      "source_name": "Journal of Organisational Behaviour",
+      "source_type": "peer_reviewed",
+      "published_date": "2024-03-14",
+      "url": "https://example.org/job/four-day-week-trial",
+      "topics": ["four day week", "productivity", "wellbeing"],
+      "body": "We report outcomes from a six-month trial of a four-day working week across 61 organisations and 2,900 employees. Self-reported productivity rose by 12 percent relative to the baseline period. Revenue across participating organisations was broadly flat, changing by less than 1 percent. Employee burnout scores fell by 71 percent of a standard deviation. Staff turnover during the trial period fell by 57 percent compared with the previous year. Of the 61 organisations, 56 chose to continue the four-day week after the trial ended. We caution that productivity was self-reported and that participating organisations volunteered, which may not represent the wider economy."
+    },
+    {
+      "document_id": "DOC-002",
+      "title": "Four-day week trial reports 12 percent productivity gain",
+      "source_name": "The Daily Business Review",
+      "source_type": "news",
+      "published_date": "2024-03-18",
+      "url": "https://example.com/news/four-day-week-gain",
+      "topics": ["four day week", "productivity"],
+      "body": "A six-month trial of the four-day working week has reported a 12 percent rise in productivity. The study covered 61 organisations and around 2,900 workers. Researchers also found that staff turnover fell by 57 percent. Most of the organisations involved said they would keep the shorter week. Critics point out that the productivity figure was reported by employees themselves rather than measured directly."
+    },
+    {
+      "document_id": "DOC-003",
+      "title": "A controlled study of reduced working hours in manufacturing",
+      "source_name": "Industrial Economics Quarterly",
+      "source_type": "peer_reviewed",
+      "published_date": "2025-01-22",
+      "url": "https://example.org/ieq/reduced-hours-manufacturing",
+      "topics": ["four day week", "productivity", "manufacturing"],
+      "body": "This controlled study examined reduced working hours in 14 manufacturing plants over twelve months, using measured output rather than self-report. Productivity fell by 3 percent relative to matched control plants. Output per hour worked rose by 9 percent, but the reduction in total hours more than offset it. Absenteeism fell by 21 percent. We conclude that results from office-based trials do not transfer directly to settings where output is bound to machine time, and that the distinction between output per hour and total output is frequently lost in public discussion."
+    },
+    {
+      "document_id": "DOC-004",
+      "title": "Why our four-day week delivered a 40 percent productivity jump",
+      "source_name": "Brightline Software Blog",
+      "source_type": "company_blog",
+      "published_date": "2024-09-02",
+      "url": "https://example.com/brightline/four-day-week",
+      "topics": ["four day week", "productivity"],
+      "body": "Since moving to a four-day week last year our team has been transformed. Productivity is up 40 percent, morale has never been higher, and we have not lost a single engineer. We measured this by asking the team how they felt about their output each Friday. We think every company should do this immediately. Our hiring pipeline has also improved dramatically since we announced the policy."
+    },
+    {
+      "document_id": "DOC-005",
+      "title": "Employee wellbeing outcomes under compressed working weeks",
+      "source_name": "Journal of Occupational Health",
+      "source_type": "peer_reviewed",
+      "published_date": "2024-11-08",
+      "url": "https://example.org/joh/compressed-weeks-wellbeing",
+      "topics": ["four day week", "wellbeing", "health"],
+      "body": "Across nine trials covering 4,100 workers, employee wellbeing improved substantially under compressed working weeks. Reported burnout fell in every trial examined. Sleep quality improved in seven of the nine. However, three trials recorded a rise in work intensity during the remaining four days, and in two of those the improvement in wellbeing was smaller than in trials without intensification. Wellbeing gains were largest where organisations reduced meeting load alongside the change in hours."
+    },
+    {
+      "document_id": "DOC-006",
+      "title": "National pilot of shorter working time: final evaluation",
+      "source_name": "Department for Work and Economic Policy",
+      "source_type": "government",
+      "published_date": "2025-06-30",
+      "url": "https://example.gov/reports/shorter-working-time",
+      "topics": ["four day week", "policy", "productivity"],
+      "body": "This evaluation covers a national pilot of shorter working time involving 340 employers. Across all sectors, measured productivity was essentially unchanged, moving by less than 2 percent in either direction. Effects varied sharply by sector: professional services saw gains, while healthcare and hospitality saw reductions in service capacity that could not be recovered. Employee satisfaction rose in every sector. We recommend that any statutory change be sector-specific rather than uniform, and note that pilot participants were self-selecting."
+    },
+    {
+      "document_id": "DOC-007",
+      "title": "Shorter week pilot finds little change in output",
+      "source_name": "National Business Wire",
+      "source_type": "news",
+      "published_date": "2025-07-02",
+      "url": "https://example.com/news/shorter-week-pilot",
+      "topics": ["four day week", "policy"],
+      "body": "A government pilot of shorter working time across 340 employers has found that productivity was essentially unchanged, moving less than 2 percent either way. Satisfaction among staff rose across every sector studied. The report recommends sector-specific rules rather than a single national policy, noting that healthcare and hospitality struggled to maintain service capacity."
+    },
+    {
+      "document_id": "DOC-008",
+      "title": "Solid-state battery cells reach 400 watt-hours per kilogram in laboratory tests",
+      "source_name": "Journal of Power Sources",
+      "source_type": "peer_reviewed",
+      "published_date": "2025-02-11",
+      "url": "https://example.org/jps/solid-state-400wh",
+      "topics": ["solid state battery", "energy density"],
+      "body": "We report solid-state lithium metal cells achieving 400 watt-hours per kilogram in laboratory conditions, compared with approximately 270 watt-hours per kilogram for current commercial lithium-ion cells. Cells retained 80 percent of capacity after 800 cycles. Manufacturing at scale remains the principal obstacle: the separator process used here has not been demonstrated beyond 50 cells per batch. We consider mass production before 2030 unlikely on the basis of current process maturity."
+    },
+    {
+      "document_id": "DOC-009",
+      "title": "Solid-state production line to open in 2026, says manufacturer",
+      "source_name": "Voltaris Motors Newsroom",
+      "source_type": "company_blog",
+      "published_date": "2025-04-03",
+      "url": "https://example.com/voltaris/solid-state-2026",
+      "topics": ["solid state battery", "manufacturing", "timeline"],
+      "body": "Voltaris Motors has announced that its first solid-state battery production line will open in 2026, delivering cells at 450 watt-hours per kilogram. The company says the line will reach 20 gigawatt-hours of annual capacity within two years. Charging times are expected to fall to 10 minutes for an 80 percent charge. The announcement did not include independent verification of the cell performance figures."
+    },
+    {
+      "document_id": "DOC-010",
+      "title": "Solid-state batteries: a realistic commercialisation timeline",
+      "source_name": "Fenwick Energy Analysis",
+      "source_type": "industry_report",
+      "published_date": "2025-05-19",
+      "url": "https://example.com/fenwick/solid-state-timeline",
+      "topics": ["solid state battery", "timeline", "cost"],
+      "body": "Our assessment places meaningful commercial solid-state battery production in 2028 at the earliest, with volume sufficient to affect vehicle prices unlikely before 2031. Announced production dates from manufacturers have slipped by an average of 2.5 years across the sector since 2020. Current solid-state cell costs are approximately 8 times those of equivalent lithium-ion cells. We expect cost parity no earlier than 2033."
+    },
+    {
+      "document_id": "DOC-011",
+      "title": "Cycle life limits in sulfide-based solid electrolytes",
+      "source_name": "Nature Energy Materials",
+      "source_type": "peer_reviewed",
+      "published_date": "2024-08-27",
+      "url": "https://example.org/nem/sulfide-cycle-life",
+      "topics": ["solid state battery", "durability"],
+      "body": "Sulfide-based solid electrolytes offer high ionic conductivity but suffer from dendrite penetration at current densities above 1 milliamp per square centimetre. In our tests, cells failed after 300 cycles at practical charging rates. Cells cycled slowly reached 1,200 cycles, but at charging rates unacceptable for vehicles. Addressing this trade-off is the central unsolved problem in the field. We note that laboratory results are frequently reported at the slow rates that flatter cycle life."
+    },
+    {
+      "document_id": "DOC-012",
+      "title": "Battery raw material supply and the cost of the energy transition",
+      "source_name": "International Energy Directorate",
+      "source_type": "government",
+      "published_date": "2025-03-05",
+      "url": "https://example.gov/ied/battery-materials",
+      "topics": ["battery", "cost", "supply chain"],
+      "body": "Lithium supply is projected to meet demand through 2028, after which a shortfall of 12 percent is expected without new extraction capacity. Nickel and cobalt supply is more constrained. Solid-state chemistries reduce cobalt demand but increase lithium metal demand per cell by around 35 percent. Recycling currently recovers under 5 percent of lithium in end-of-life cells."
+    },
+    {
+      "document_id": "DOC-013",
+      "title": "Measured output of remote and office workers in a large services firm",
+      "source_name": "Review of Economic Studies in Work",
+      "source_type": "peer_reviewed",
+      "published_date": "2024-06-12",
+      "url": "https://example.org/resw/remote-output",
+      "topics": ["remote work", "productivity"],
+      "body": "Using individually measured output in a services firm of 12,000 staff, we find remote workers produced 8 percent more than office-based colleagues on comparable tasks. The effect was concentrated in tasks requiring sustained concentration. Collaborative tasks showed no significant difference. Time spent in meetings fell by 23 percent among remote staff. We caution that assignment to remote work was not random in this setting."
+    },
+    {
+      "document_id": "DOC-014",
+      "title": "A randomised trial of hybrid working in a technology company",
+      "source_name": "Quarterly Journal of Labour Economics",
+      "source_type": "peer_reviewed",
+      "published_date": "2025-04-30",
+      "url": "https://example.org/qjle/hybrid-randomised",
+      "topics": ["remote work", "productivity", "hybrid"],
+      "body": "In a randomised trial assigning 1,600 employees to hybrid or fully office-based work, measured output fell by 4 percent among hybrid workers over eighteen months. Attrition was 33 percent lower in the hybrid group. Junior employees showed the largest output reduction, and promotion rates for hybrid juniors were 15 percent lower. We interpret the output result as a training and supervision effect rather than an effort effect, and note the saving from lower attrition may exceed the output cost."
+    },
+    {
+      "document_id": "DOC-015",
+      "title": "Remote workers 8 percent more productive, study finds",
+      "source_name": "Workplace Digest",
+      "source_type": "news",
+      "published_date": "2024-06-20",
+      "url": "https://example.com/news/remote-8-percent",
+      "topics": ["remote work", "productivity"],
+      "body": "A study of 12,000 staff at a large services firm has found remote workers produced 8 percent more than their office-based colleagues. The gain was largest on tasks needing deep concentration, with no difference on collaborative work. Remote staff also spent 23 percent less time in meetings. The researchers note that staff were not randomly assigned to remote work."
+    },
+    {
+      "document_id": "DOC-016",
+      "title": "Collaboration network effects of distributed teams",
+      "source_name": "Journal of Organisational Behaviour",
+      "source_type": "peer_reviewed",
+      "published_date": "2025-02-28",
+      "url": "https://example.org/job/distributed-collaboration",
+      "topics": ["remote work", "collaboration"],
+      "body": "Analysis of communication metadata across 43 firms shows that distributed teams form 19 percent fewer cross-team connections than co-located teams. Existing connections were used more intensively. New joiners took 40 percent longer to reach a stable collaboration network. Effects were substantially smaller in organisations with structured onboarding and deliberate cross-team rituals."
+    },
+    {
+      "document_id": "DOC-017",
+      "title": "Office attendance mandates and voluntary departures",
+      "source_name": "Fenwick Workforce Analysis",
+      "source_type": "industry_report",
+      "published_date": "2025-05-07",
+      "url": "https://example.com/fenwick/attendance-mandates",
+      "topics": ["remote work", "retention", "policy"],
+      "body": "Across 88 firms introducing office attendance mandates, voluntary departures rose by 14 percent in the following two quarters. Departures were concentrated among staff with more than five years of tenure and among carers. Firms that paired mandates with commuting support saw a smaller effect. We did not find a measurable change in output over the same period, though the window is short."
+    },
+    {
+      "document_id": "DOC-018",
+      "title": "Municipal recycling rates by district, 2024",
+      "source_name": "City Statistics Office",
+      "source_type": "government",
+      "published_date": "2025-01-15",
+      "url": "https://example.gov/city/recycling-2024",
+      "topics": ["recycling", "waste", "municipal"],
+      "body": "Household recycling rates across the city's twelve districts averaged 43 percent in 2024, up from 41 percent in 2023. The northern districts recorded the highest rates. Contamination of recycling streams averaged 11 percent. Food waste collection was extended to four further districts during the year."
+    },
+    {
+      "document_id": "DOC-019",
+      "title": "A history of the shipping container",
+      "source_name": "Maritime History Review",
+      "source_type": "peer_reviewed",
+      "published_date": "2023-09-01",
+      "url": "https://example.org/mhr/shipping-container",
+      "topics": ["shipping", "history", "logistics"],
+      "body": "The standardised shipping container, introduced commercially in 1956, reduced port handling costs by more than 90 percent within two decades. Port labour requirements fell sharply, and the geography of global manufacturing reorganised around container ports. Standardisation of dimensions in 1968 was the decisive step, without which network effects would not have accumulated."
+    },
+    {
+      "document_id": "DOC-020",
+      "title": "What we learned running a four-day week for two years",
+      "source_name": "r/management",
+      "source_type": "forum",
+      "published_date": "2025-08-14",
+      "url": "https://example.com/forum/four-day-two-years",
+      "topics": ["four day week", "experience"],
+      "body": "We have run a four-day week for two years at a 40-person agency. Honestly it is mixed. Productivity is maybe up 5 percent but client response times got worse and we lost two accounts over it. Everyone loves it and nobody wants to go back. Hiring is much easier. If you are client-facing think hard about coverage before you do this."
+    },
+    {
+      "document_id": "DOC-021",
+      "title": "Charging infrastructure and vehicle adoption rates",
+      "source_name": "International Energy Directorate",
+      "source_type": "government",
+      "published_date": "2025-07-21",
+      "url": "https://example.gov/ied/charging-infrastructure",
+      "topics": ["electric vehicles", "charging", "adoption"],
+      "body": "Public charging points grew 34 percent year on year. Adoption of electric vehicles correlates most strongly with charger availability within 5 kilometres of home, more than with purchase price subsidies. Average charging time at public rapid chargers is 38 minutes to 80 percent. Grid connection delays are now the binding constraint on new charger deployment in most regions."
+    }
+  ]
+}
