@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Research System</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-number">03</span>
+    <div>
+      <h1>Agentic Research System</h1>
+      <p class="brand-sub">plan &middot; parallel workers &middot; shared budget &middot; conflicts surfaced &middot; cited report</p>
+    </div>
+  </div>
+  <div class="status-strip" id="statusStrip"><span class="pill">checking...</span></div>
+</header>
+
+<nav class="tabs">
+  <button class="tab tab-active" data-panel="panelAsk">Research</button>
+  <button class="tab" data-panel="panelTrace">Run trace</button>
+  <button class="tab" data-panel="panelSources">Corpus</button>
+  <button class="tab" data-panel="panelMetrics">Metrics</button>
+</nav>
+
+<main>
+
+  <!-- ================= RESEARCH ================= -->
+  <section id="panelAsk" class="panel panel-active">
+    <div class="two-column">
+      <div>
+        <div class="card">
+          <h2>Ask a research question</h2>
+          <textarea id="questionInput" rows="2"
+            placeholder="Is the four-day work week actually good for productivity?"></textarea>
+
+          <div class="controls">
+            <label class="who">budget: seconds
+              <input type="number" id="maxSeconds" value="120" min="5" max="300" step="5">
+            </label>
+            <label class="who">tokens
+              <input type="number" id="maxTokens" value="120000" min="2000" step="1000">
+            </label>
+            <label class="who">sub-questions
+              <input type="number" id="maxSubquestions" value="5" min="1" max="6">
+            </label>
+            <button class="primary" id="researchButton">Research</button>
+          </div>
+
+          <div class="samples">
+            <span>Try:</span>
+            <button class="chip" data-q="Is the four-day work week actually good for productivity?">four-day week</button>
+            <button class="chip" data-q="When will solid-state batteries actually be available in cars?">solid-state batteries</button>
+            <button class="chip" data-q="Does remote work increase or decrease productivity?">remote work</button>
+            <button class="chip" data-q="What is the economic impact of deep sea mining on coastal fisheries?">nothing in the corpus</button>
+          </div>
+          <p class="hint" style="margin-top:12px">
+            Set the token budget to <b>3000</b> and watch the report come back partial,
+            with the sub-questions it could not reach listed under <b>Gaps</b>.
+            That is the behaviour worth seeing.
+          </p>
+        </div>
+
+        <div class="card" id="reportCard" hidden>
+          <div class="card-head">
+            <h2>Report</h2>
+            <div class="badges" id="reportBadges"></div>
+          </div>
+
+          <div id="partialBanner" class="warn-box" hidden></div>
+
+          <h3>Summary</h3>
+          <div id="reportSummary" class="prose"></div>
+
+          <div id="conflictsBlock" hidden>
+            <h3>Where the sources disagree</h3>
+            <div id="conflictList"></div>
+          </div>
+
+          <h3>Findings</h3>
+          <div id="sectionList"></div>
+
+          <div id="gapsBlock" hidden>
+            <h3>What this report does not cover</h3>
+            <ul id="gapList" class="gap-list"></ul>
+          </div>
+
+          <h3>Sources</h3>
+          <div id="citationList"></div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card explain">
+          <h3 style="margin-top:0">What happens when you press Research</h3>
+          <ol class="pipeline">
+            <li><b>Plan</b> &mdash; split the question into independent sub-questions</li>
+            <li><b>Validate</b> &mdash; drop near-duplicates and any that just restate the question</li>
+            <li><b>Research</b> &mdash; workers run in parallel, all spending <i>one</i> budget</li>
+            <li><b>Extract</b> &mdash; a claim plus the quote that supports it; quotes are verified</li>
+            <li><b>Deduplicate</b> &mdash; collapse findings that say the same thing</li>
+            <li><b>Conflicts</b> &mdash; find findings that disagree, and keep both</li>
+            <li><b>Synthesise</b> &mdash; sections, then the summary, from the reserved budget</li>
+            <li><b>Verify</b> &mdash; strip invented citations, check every figure</li>
+          </ol>
+          <h3>The budget is shared</h3>
+          <p class="hint">
+            One budget for the whole run, not one per worker. Four workers with a
+            quarter each would waste whatever the easy sub-questions do not use,
+            and starve the hard one that needed it.
+          </p>
+        </div>
+
+        <div class="card" id="budgetCard" hidden>
+          <h3 style="margin-top:0">Budget for this run</h3>
+          <div id="budgetDetail"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= TRACE ================= -->
+  <section id="panelTrace" class="panel">
+    <div class="card">
+      <h2>Run trace</h2>
+      <p class="hint">Every stage, what it cost, and what it produced. Run a question first.</p>
+      <div id="traceBody"><p class="hint">Nothing yet.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= CORPUS ================= -->
+  <section id="panelSources" class="panel">
+    <div class="card">
+      <h2>The corpus</h2>
+      <p class="hint">
+        Every document the workers can find. Built deliberately: the same study is
+        reported twice so deduplication has a real duplicate, two studies report
+        different figures so conflict detection has a real conflict, a company blog
+        claims a far bigger effect than any study, and several documents are about
+        something else entirely.
+      </p>
+      <div id="sourceList">loading...</div>
+    </div>
+  </section>
+
+  <!-- ================= METRICS ================= -->
+  <section id="panelMetrics" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Metrics</h2>
+        <button id="refreshMetrics">Refresh</button>
+      </div>
+      <p class="hint">
+        Watch the budget-exhausted rate. Near zero means the budgets are generous
+        and you are probably overspending; near half means users are getting
+        partial answers.
+      </p>
+      <div id="metricCards" class="metric-grid"></div>
+      <details class="trace"><summary>Raw metrics JSON</summary><pre id="metricsRaw"></pre></details>
+    </div>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
