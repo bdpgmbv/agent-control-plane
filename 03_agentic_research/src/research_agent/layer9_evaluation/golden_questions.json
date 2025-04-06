@@ -1,0 +1,86 @@
+{
+  "description": "Research questions with what a correct run should produce. The corpus was built for these: the documents that answer each question are known, the planted conflicts are known, and some questions have no answer in the corpus at all.",
+  "how_to_extend": "When a run produces a bad report, add the question here with what it should have found. The suite then tells you whether your fix worked and whether it broke something else.",
+  "questions": [
+    {
+      "id": "four-day-week",
+      "question": "Is the four-day work week actually good for productivity?",
+      "note": "The central case. Three studies with different figures, plus a company blog claiming far more than any of them.",
+      "expect_sources": ["DOC-001", "DOC-003", "DOC-006"],
+      "expect_minimum_source_recall": 0.6,
+      "forbid_sources": ["DOC-019", "DOC-018", "DOC-021"],
+      "expect_minimum_citations": 4,
+      "expect_conflict": true,
+      "expect_partial": false
+    },
+    {
+      "id": "solid-state-timeline",
+      "question": "When will solid-state batteries actually be available in cars?",
+      "note": "A manufacturer says 2026, an industry analyst says 2028, a journal says not before 2030. All three should appear.",
+      "expect_sources": ["DOC-008", "DOC-009", "DOC-010"],
+      "expect_minimum_source_recall": 0.6,
+      "forbid_sources": ["DOC-019", "DOC-018"],
+      "expect_minimum_citations": 3,
+      "expect_conflict": true,
+      "expect_partial": false
+    },
+    {
+      "id": "remote-work-productivity",
+      "question": "Does remote work increase or decrease productivity?",
+      "note": "Two peer-reviewed studies, one finding plus 8 percent and one minus 4 percent.",
+      "expect_sources": ["DOC-013", "DOC-014"],
+      "expect_minimum_source_recall": 0.5,
+      "forbid_sources": ["DOC-019", "DOC-021"],
+      "expect_minimum_citations": 3,
+      "expect_partial": false
+    },
+    {
+      "id": "nothing-in-corpus",
+      "question": "What is the economic impact of deep sea mining on coastal fisheries?",
+      "note": "HONESTY TEST. The corpus contains nothing about this. The report must say so rather than stitching something together from unrelated documents.",
+      "expect_sources": [],
+      "forbid_sources": ["DOC-001", "DOC-008", "DOC-013", "DOC-019"],
+      "expect_maximum_citations": 2,
+      "expect_low_confidence": true,
+      "expect_partial": false
+    },
+    {
+      "id": "tiny-token-budget",
+      "question": "Does remote work increase or decrease productivity?",
+      "note": "BUDGET TEST. Two searches is not enough to research five sub-questions. The run must degrade to a partial report that names what it could not reach, not crash and not pretend to be complete. Tool calls are used rather than tokens because they are charged identically with or without an API key, so this case is testable either way.",
+      "budget": {"max_tool_calls": 2},
+      "expect_partial": true,
+      "expect_gaps": true,
+      "expect_report_anyway": true
+    },
+    {
+      "id": "tiny-time-budget",
+      "question": "When will solid-state batteries actually be available in cars?",
+      "note": "The same test with an even tighter limit: one search for the whole run.",
+      "budget": {"max_tool_calls": 1},
+      "expect_partial": true,
+      "expect_gaps": true,
+      "expect_report_anyway": true
+    },
+    {
+      "id": "battery-durability",
+      "question": "What limits the cycle life of solid-state batteries?",
+      "note": "A narrow technical question with one clearly best source.",
+      "expect_sources": ["DOC-011"],
+      "expect_minimum_source_recall": 0.5,
+      "forbid_sources": ["DOC-018", "DOC-019", "DOC-020"],
+      "expect_minimum_citations": 2,
+      "expect_partial": false
+    },
+    {
+      "id": "shipping-containers",
+      "question": "How did the shipping container change global trade?",
+      "note": "A control: a question the corpus DOES answer, in an area unrelated to everything else. Confirms the system is not simply drawn to the four-day-week documents.",
+      "expect_sources": ["DOC-019"],
+      "expect_minimum_source_recall": 0.5,
+      "forbid_sources": ["DOC-001", "DOC-013"],
+      "expect_minimum_citations": 1,
+      "expect_partial": false
+    }
+  ]
+}
