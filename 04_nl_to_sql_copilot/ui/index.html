@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NL to SQL Analytics Copilot</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-number">04</span>
+    <div>
+      <h1>NL&nbsp;&rarr;&nbsp;SQL Analytics Copilot</h1>
+      <p class="brand-sub">schema retrieval &middot; validation before execution &middot; read-only sandbox &middot; repair loop</p>
+    </div>
+  </div>
+  <div class="status-strip" id="statusStrip"><span class="pill">checking...</span></div>
+</header>
+
+<nav class="tabs">
+  <button class="tab tab-active" data-panel="panelAsk">Ask</button>
+  <button class="tab" data-panel="panelSchema">Schema</button>
+  <button class="tab" data-panel="panelDefences">Defences</button>
+  <button class="tab" data-panel="panelMetrics">Metrics</button>
+</nav>
+
+<main>
+
+  <!-- ================= ASK ================= -->
+  <section id="panelAsk" class="panel panel-active">
+    <div class="two-column">
+      <div>
+        <div class="card">
+          <h2>Ask a question about the data</h2>
+          <textarea id="questionInput" rows="2"
+            placeholder="What is the total revenue by country?"></textarea>
+          <div class="controls">
+            <label class="who">max rows <input type="number" id="maxRows" value="200" min="1" max="1000" step="50"></label>
+            <button class="primary" id="askButton">Ask</button>
+          </div>
+
+          <div class="samples">
+            <span>Questions:</span>
+            <button class="chip" data-q="How many orders were cancelled in 2024?">count with a filter</button>
+            <button class="chip" data-q="What is the total revenue by channel?">grouped revenue</button>
+            <button class="chip" data-q="What is the total revenue by country?">revenue needing a 3-table join</button>
+            <button class="chip" data-q="What is the average order value?">average with a subquery</button>
+            <button class="chip" data-q="What are the most common return reasons?">breakdown</button>
+          </div>
+          <div class="samples">
+            <span class="danger-label">Try to break it:</span>
+            <button class="chip chip-danger" data-q="What does each employee get paid?">a table it cannot see</button>
+            <button class="chip chip-danger" data-q="Delete all the cancelled orders">a destructive request</button>
+            <button class="chip chip-danger" data-q="Show me the order notes">data containing an injection</button>
+          </div>
+        </div>
+
+        <div class="card" id="answerCard" hidden>
+          <div class="card-head">
+            <h2>Answer</h2>
+            <div class="badges" id="answerBadges"></div>
+          </div>
+
+          <div id="refusalBox" class="warn-box" hidden></div>
+          <div id="answerText" class="prose"></div>
+
+          <div id="sqlBlock" hidden>
+            <h3>The SQL that ran</h3>
+            <pre id="sqlText"></pre>
+            <div id="sqlNotes" class="hint"></div>
+          </div>
+
+          <div id="resultBlock" hidden>
+            <h3>Result</h3>
+            <div id="resultTable" class="table-scroll"></div>
+          </div>
+
+          <details class="trace" id="attemptsBlock" hidden>
+            <summary>Attempts &mdash; generate, validate, execute</summary>
+            <div id="attemptsBody"></div>
+          </details>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card explain">
+          <h3 style="margin-top:0">What happens to your question</h3>
+          <ol class="pipeline">
+            <li><b>Retrieve schema</b> &mdash; pick the tables the question needs, plus any needed to join them</li>
+            <li><b>Generate</b> &mdash; the model writes SQL</li>
+            <li><b>Validate</b> &mdash; nine rules; anything that is not a plain SELECT over allowed tables is refused</li>
+            <li><b>Execute</b> &mdash; read-only, with a timeout and a row cap</li>
+            <li><b>Repair</b> &mdash; on a fixable error, show the model the message &mdash; and <b>validate again</b></li>
+            <li><b>Explain</b> &mdash; describe the rows, treating them as data</li>
+          </ol>
+          <h3>Two independent defences</h3>
+          <p class="hint">
+            The validator reads the SQL and refuses anything that is not a read.
+            The database connection is opened <b>read-only</b>, so a write fails
+            even if the validator is wrong. Neither is a reason to skip the other.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= SCHEMA ================= -->
+  <section id="panelSchema" class="panel">
+    <div class="card">
+      <h2>What the copilot can see</h2>
+      <p class="hint">
+        An allowlist, not a blocklist. A table that is not on this list is never
+        introspected, never described in a prompt, and refused if the model asks
+        for it anyway.
+      </p>
+      <div id="hiddenTables"></div>
+      <div id="schemaList">loading...</div>
+    </div>
+  </section>
+
+  <!-- ================= DEFENCES ================= -->
+  <section id="panelDefences" class="panel">
+    <div class="card">
+      <h2>The nine validation rules</h2>
+      <p class="hint">Every generated query passes all nine before it reaches the database &mdash; including a repaired one.</p>
+      <table>
+        <tr><th>#</th><th>rule</th><th>what it stops</th></tr>
+        <tr><td>1</td><td>not empty</td><td>a model that returned nothing</td></tr>
+        <tr><td>2</td><td>no unterminated string</td><td>the rest of the statement hidden inside a quote</td></tr>
+        <tr><td>3</td><td>parentheses balance</td><td>malformed SQL reaching the engine</td></tr>
+        <tr><td>4</td><td>exactly one statement</td><td><code>SELECT 1; DROP TABLE orders</code></td></tr>
+        <tr><td>5</td><td>starts with SELECT or WITH</td><td><code>DELETE</code>, <code>PRAGMA</code>, <code>ATTACH</code></td></tr>
+        <tr><td>6</td><td>no forbidden keyword</td><td><code>INTO</code>, <code>load_extension</code>, <code>GRANT</code></td></tr>
+        <tr><td>7</td><td><b>every table is on the allowlist</b></td><td>anything we did not deliberately expose</td></tr>
+        <tr><td>8</td><td>join count within the limit</td><td>accidental cartesian products</td></tr>
+        <tr><td>9</td><td>a LIMIT is present</td><td>a million rows arriving in the browser</td></tr>
+      </table>
+
+      <h3>Why rule 7 is the one that matters</h3>
+      <p class="hint">
+        Rule 6 is a blocklist &mdash; a guess about what somebody will think of, and
+        SQL has a very large surface. Rule 7 is an allowlist: a query reaching for
+        anything we did not expose is refused whether or not we anticipated it.
+        Blocklists fail open; allowlists fail closed.
+      </p>
+
+      <h3>And the validator is not the last line</h3>
+      <p class="hint">
+        The connection is opened read-only. A write fails inside SQLite itself,
+        which has had rather more scrutiny than a few hundred lines of my
+        reasoning about SQL grammar.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= METRICS ================= -->
+  <section id="panelMetrics" class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>Metrics</h2>
+        <button id="refreshMetrics">Refresh</button>
+      </div>
+      <p class="hint">
+        Watch the refusal reasons. A spike in <code>unknown_table</code> usually
+        means schema retrieval is offering the wrong tables, not that anyone is
+        attacking you.
+      </p>
+      <div id="metricCards" class="metric-grid"></div>
+      <details class="trace"><summary>Raw metrics JSON</summary><pre id="metricsRaw"></pre></details>
+    </div>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
