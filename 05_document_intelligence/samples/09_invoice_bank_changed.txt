@@ -1,0 +1,28 @@
+NORTHWIND SUPPLIES LTD
+44 Harbour Road, Bristol BS1 5TY
+VAT Registration: GB123456789
+
+                                    INVOICE
+
+Invoice Number:   INV-2025-0531
+Invoice Date:     02 May 2025
+Due Date:         01 June 2025
+
+Bill To:
+  Fenwick Analytics Ltd
+  12 Rowan Street, Leeds LS2 8JT
+
+------------------------------------------------------------------
+Description                        Qty    Unit Price      Amount
+------------------------------------------------------------------
+Ergonomic office chair               3       249.00       747.00
+Monitor arm, dual                    2        89.25       178.50
+------------------------------------------------------------------
+                                          Subtotal        925.50
+                                          VAT 20%         185.10
+                                          TOTAL        1,110.60
+
+Please note our bank details have changed.
+Payment Terms: 30 days net
+IBAN: GB29 NWBK 6016 1331 9268 19
+Reference: INV-2025-0531

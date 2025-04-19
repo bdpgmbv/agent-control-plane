@@ -1,0 +1,24 @@
+HARLOW INSTRUMENTS LIMITED
+3l Beacon Way, Manchester M4 5BD
+VAT Registration: GB55l234567
+
+                                    lNVOICE
+
+Invoice Number:   INV-2O25-O339
+Invoice Date:     O8 February 2025
+Due Date:         1O March 2025
+
+Bill To:
+  Fenwick Analytics Ltd
+
+------------------------------------------------------------------
+Description                        Qty    Unit Price      Amount
+------------------------------------------------------------------
+Precision multimeter                 2       310.00       620.00
+Thermal probe set                    3        94.00       282.00
+------------------------------------------------------------------
+                                          Subtotal        902.00
+                                          VAT 20%         180.40
+                                          TOTAL         1,082.40
+
+IBAN: GB82 WEST l234 5698 7654 32

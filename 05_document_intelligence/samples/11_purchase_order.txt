@@ -1,0 +1,27 @@
+FENWICK ANALYTICS LTD
+12 Rowan Street, Leeds LS2 8JT
+
+                               PURCHASE ORDER
+
+PO Number:        PO-2025-0311
+Order Date:       28 February 2025
+Required By:      21 March 2025
+
+Supplier:
+  Northwind Supplies Ltd
+  44 Harbour Road, Bristol BS1 5TY
+
+------------------------------------------------------------------
+Description                        Qty    Unit Price      Amount
+------------------------------------------------------------------
+Ergonomic office chair               4       249.00       996.00
+Standing desk, 160cm                 2       429.50       859.00
+Monitor arm, dual                    4        89.25       357.00
+Cable management tray                6        18.50       111.00
+------------------------------------------------------------------
+                                          Subtotal      2,323.00
+                                          VAT 20%         464.60
+                                          TOTAL        2,787.60
+
+Authorised by: R. Patel, Operations
+Delivery: 12 Rowan Street, Leeds LS2 8JT

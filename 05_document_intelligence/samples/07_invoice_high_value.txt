@@ -1,0 +1,26 @@
+MERIDIAN CAPITAL EQUIPMENT PLC
+100 Fenchurch Street, London EC3M 5JD
+VAT Registration: GB444555666
+
+                                    INVOICE
+
+Invoice Number:   INV-2025-2001
+Invoice Date:     03 June 2025
+Due Date:         03 July 2025
+
+Bill To:
+  Fenwick Analytics Ltd
+  12 Rowan Street, Leeds LS2 8JT
+
+------------------------------------------------------------------
+Description                        Qty    Unit Price      Amount
+------------------------------------------------------------------
+Server rack, fully populated         2    18,400.00    36,800.00
+Network switch, 48 port              4     2,150.00     8,600.00
+Installation and commissioning       1     4,500.00     4,500.00
+------------------------------------------------------------------
+                                          Subtotal     49,900.00
+                                          VAT 20%       9,980.00
+                                          TOTAL        59,880.00
+
+IBAN: GB82 WEST 1234 5698 7654 32

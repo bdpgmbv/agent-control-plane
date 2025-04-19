@@ -1,0 +1,29 @@
+SERVICES AGREEMENT
+
+This Agreement is made on 01 April 2025
+
+BETWEEN:
+  Fenwick Analytics Ltd, of 12 Rowan Street, Leeds LS2 8JT ("the Client")
+AND:
+  Copperfield Data Consulting Ltd, of 5 Anchor Court, Bristol BS2 0EL ("the Supplier")
+
+1. TERM
+   This Agreement commences on 15 April 2025 and continues until
+   14 April 2026 unless terminated earlier under clause 4.
+
+2. SERVICES
+   The Supplier shall provide data engineering and reporting services as set
+   out in Schedule 1.
+
+3. CHARGES
+   Contract Value: 84,000.00 GBP per annum, invoiced monthly in arrears.
+   Payment Terms: 30 days from the date of invoice.
+
+4. TERMINATION
+   Either party may terminate this Agreement by giving 90 days written notice.
+
+5. GOVERNING LAW
+   This Agreement is governed by the laws of England and Wales.
+
+Signed for the Client:    ..................  Date: 01 April 2025
+Signed for the Supplier:  ..................  Date: 01 April 2025

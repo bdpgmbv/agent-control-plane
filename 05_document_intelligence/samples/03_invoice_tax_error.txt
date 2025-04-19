@@ -1,0 +1,24 @@
+ORCHARD PRINT SERVICES
+9 Mill Lane, Oxford OX1 3RH
+VAT Registration: GB987654321
+
+                                    INVOICE
+
+Invoice Number:   INV-2025-1150
+Invoice Date:     21 May 2025
+Due Date:         20 June 2025
+
+Bill To:
+  Fenwick Analytics Ltd
+
+------------------------------------------------------------------
+Description                        Qty    Unit Price      Amount
+------------------------------------------------------------------
+Brochure printing, A5, 1000 units    3       420.00      1260.00
+Design amendments                    5        85.00       425.00
+------------------------------------------------------------------
+                                          Subtotal      1,685.00
+                                          VAT 20%         337.00
+                                          TOTAL        2,122.00
+
+IBAN: GB82 WEST 1234 5698 7654 32

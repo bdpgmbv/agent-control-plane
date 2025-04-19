@@ -1,0 +1,24 @@
+ASHDOWN LOGISTICS LTD
+7 Quay Street, Southampton SO14 2AQ
+VAT Registration: GB222333444
+
+                                    INVOICE
+
+Invoice Number:   INV-2025-0655
+Invoice Date:     19 April 2025
+Due Date:         19 May 2025
+
+Bill To:
+  Fenwick Analytics Ltd
+
+------------------------------------------------------------------
+Description                        Qty    Unit Price      Amount
+------------------------------------------------------------------
+Pallet delivery, zone 3             12        58.00       696.00
+Fuel surcharge                       1        84.00        84.00
+------------------------------------------------------------------
+                                          Subtotal        780.00
+                                          VAT 20%         156.00
+                                          TOTAL          936.00
+
+IBAN: GB82 WEST 1234 5698 7654 99
