@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document Intelligence Pipeline</title>
+<link rel="stylesheet" href="/ui/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Document Intelligence Pipeline</h1>
+    <p class="subtitle">classify &rarr; extract &rarr; validate &rarr; score &rarr; decide</p>
+  </div>
+  <div class="header-right">
+    <span id="mode-badge" class="badge badge-grey">checking&hellip;</span>
+    <span id="pending-badge" class="badge badge-grey">&ndash;</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="process">Process</button>
+  <button class="tab" data-tab="review">Review queue</button>
+  <button class="tab" data-tab="documents">Processed</button>
+  <button class="tab" data-tab="about">How it decides</button>
+</nav>
+
+<!-- ============ PROCESS ============ -->
+<section id="tab-process" class="panel">
+
+  <div class="card">
+    <h2>Run the whole sample folder</h2>
+    <p class="hint">
+      Thirteen documents: five with nothing wrong with them, and eight carrying
+      one specific defect each &ndash; broken arithmetic, tax that does not add
+      up, a bad bank checksum, a duplicate invoice, a supplier whose bank account
+      has changed, a date in the future, scanner damage, and a letter that is not
+      a business document at all. They are numbered <code>01_</code> to
+      <code>13_</code> because arrival order is part of the input: the second copy
+      of an invoice is the duplicate, the first is just an invoice.
+    </p>
+    <div class="row">
+      <button id="run-samples" class="primary">Process all samples</button>
+      <button id="reset-store" class="ghost">Clear everything and start again</button>
+    </div>
+    <div id="batch-summary"></div>
+    <div id="batch-table"></div>
+  </div>
+
+  <div class="card">
+    <h2>Process one document</h2>
+    <div class="row">
+      <select id="sample-picker"><option value="">load a sample&hellip;</option></select>
+      <label class="file-button">
+        upload a file
+        <input type="file" id="file-input" accept=".txt,.md,.pdf,.png,.jpg,.jpeg,.webp">
+      </label>
+    </div>
+    <textarea id="document-text" rows="14"
+      placeholder="Paste an invoice, receipt, purchase order or contract here."></textarea>
+    <div class="row">
+      <button id="process-text" class="primary">Process this document</button>
+      <span id="process-status" class="status"></span>
+    </div>
+  </div>
+
+  <div id="result-area"></div>
+</section>
+
+<!-- ============ REVIEW ============ -->
+<section id="tab-review" class="panel hidden">
+  <div class="card">
+    <h2>Waiting for a person</h2>
+    <p class="hint">
+      Each of these failed one of the four gates. The reason is shown, not just a
+      score. Correcting a field re-runs every check and tells you straight away
+      whether the fix worked.
+    </p>
+    <button id="refresh-reviews" class="ghost">Refresh</button>
+    <div id="review-list"></div>
+  </div>
+  <div id="review-detail"></div>
+</section>
+
+<!-- ============ DOCUMENTS ============ -->
+<section id="tab-documents" class="panel hidden">
+  <div class="card">
+    <h2>Everything processed</h2>
+    <button id="refresh-documents" class="ghost">Refresh</button>
+    <div id="documents-list"></div>
+  </div>
+  <div id="document-detail"></div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="tab-about" class="panel hidden">
+  <div class="card">
+    <h2>The four gates</h2>
+    <p class="hint">A document is processed without a person only if it passes all four.</p>
+    <ol class="gates">
+      <li><strong>No validation errors.</strong> Something that does not add up is
+        never paid automatically, however clearly it was printed.</li>
+      <li><strong>Confidence at or above the gate.</strong> How well the document
+        was <em>read</em> &ndash; built from the type score, each required field's
+        own score, scanner repairs and warnings. Never from asking a model how
+        sure it is.</li>
+      <li><strong>Every required field clears its own bar.</strong> Checked one by
+        one, because an average lets a crisp supplier name hide an unreadable
+        total.</li>
+      <li><strong>The amount is below the limit.</strong> Not a doubt about the
+        reading. A policy: the cost of being wrong scales with the number, and the
+        cost of a human glance does not.</li>
+    </ol>
+    <h2>Why errors do not lower confidence</h2>
+    <p class="hint">
+      A crisp PDF whose line items do not add up was read <em>perfectly</em> and is
+      <em>wrong</em>. A smudged fax that adds up may have been misread and is at
+      least self-consistent. Those two need different things from a person, so the
+      pipeline keeps &ldquo;did I read it correctly?&rdquo; and &ldquo;is it
+      correct?&rdquo; as separate answers.
+    </p>
+    <h2>Where the model is used</h2>
+    <p class="hint">
+      Three places, all optional: transcribing a scan that has no text layer,
+      naming a document the keyword rules could not place, and filling a
+      <em>required</em> field the label patterns missed. Everything else &ndash;
+      labels, sums, checksums, dates, duplicates, confidence, the decision &ndash;
+      is ordinary code. On the sample folder that works out to one model call
+      across thirteen documents.
+    </p>
+    <div id="gate-values"></div>
+  </div>
+</section>
+
+<script src="/ui/app.js"></script>
+</body>
+</html>
