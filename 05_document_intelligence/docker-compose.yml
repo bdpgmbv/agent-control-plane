@@ -1,0 +1,27 @@
+services:
+  doc-intelligence:
+    build: .
+    image: doc-intelligence:1.0.0
+    ports:
+      - "8050:8050"
+    environment:
+      # Nothing secret is baked into the image. Without a key the service still
+      # runs - every project in this series works offline.
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      HOST: "0.0.0.0"
+      PORT: "8050"
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      # State outlives the container; source does not go in.
+      - doc-intelligence-data:/srv/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8050/api/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  doc-intelligence-data:
