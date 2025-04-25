@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coding-agent"
+version = "1.0.0"
+description = "AI coding agent that is refused when its patch cheats"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "python-multipart==0.0.20",
+    "pydantic==2.10.4",
+    "python-dotenv==1.0.1",
+    "openai==1.59.6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.4", "ruff==0.8.4", "mypy==1.14.0", "httpx==0.28.1"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# Data files that live inside the package - golden datasets, the sandbox
+# pytest config. Without this they are missing from an installed copy and the
+# evaluation suite fails with a confusing FileNotFoundError.
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.ini", "*.txt", "*.md"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+# The benchmark repository is a fixture that the agent edits, complete with its
+# seeded bugs. It is the thing under test, not source to be tidied.
+exclude = ["benchmark"]
+
+[tool.ruff.lint]
+# C4 (comprehensions) is deliberately NOT enabled: this codebase uses explicit
+# loops on purpose so it can be read by someone learning the system.
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = [
+    "E501",   # line length is handled by the formatter, not enforced here
+    "B008",   # FastAPI's Depends() in a default argument is the documented idiom
+
+    # UP031 wants f-strings instead of "%s" % value. This codebase uses
+    # percent formatting consistently - about 600 sites across the series -
+    # and that consistency is worth more than the modernisation. It is
+    # switched off as a stated decision, not because there were a lot of
+    # violations: converting 600 sites mechanically inside a restructure
+    # would be a large, risky, untested change (ruff itself classes the fix
+    # as unsafe), and it is a separate job with its own verification.
+    "UP031",
+]
+
+# tests/conftest.py sets environment variables BEFORE importing any app module,
+# because settings are read at import time. That is the whole point of the file,
+# so the "imports must come first" rule does not apply to it.
+[tool.ruff.lint.per-file-ignores]
+"tests/conftest.py" = ["E402"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src"]
+ignore_missing_imports = true
+# Deliberately not strict. These projects are built to be read, and full
+# strictness would fill them with annotations that teach nothing.
+check_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q --tb=short"
