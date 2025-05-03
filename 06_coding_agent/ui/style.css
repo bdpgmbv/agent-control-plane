@@ -1,0 +1,114 @@
+:root {
+  --ink: #1b2230; --ink-soft: #5b6678; --line: #dfe4ec; --bg: #f4f6fa;
+  --card: #ffffff; --blue: #2c5fd6; --blue-dark: #21489f;
+  --green: #1c7d4d; --green-bg: #e7f6ee;
+  --amber: #96650a; --amber-bg: #fdf3e0;
+  --red: #b0322b; --red-bg: #fdecea; --grey-bg: #eef1f6;
+  --code-bg: #1b2230; --code-ink: #dfe7f5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg); color: var(--ink); font-size: 15px; line-height: 1.55;
+}
+header {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  flex-wrap: wrap; padding: 18px 26px; background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+header h1 { margin: 0; font-size: 20px; letter-spacing: -0.2px; }
+.subtitle { margin: 2px 0 0; color: var(--ink-soft); font-size: 13px; }
+.header-right { display: flex; gap: 8px; align-items: center; }
+
+.badge { display: inline-block; padding: 3px 11px; border-radius: 999px;
+         font-size: 12px; font-weight: 600; }
+.badge-grey { background: var(--grey-bg); color: var(--ink-soft); }
+.badge-green { background: var(--green-bg); color: var(--green); }
+.badge-amber { background: var(--amber-bg); color: var(--amber); }
+.badge-red { background: var(--red-bg); color: var(--red); }
+.badge-blue { background: #e8effb; color: var(--blue-dark); }
+
+.tabs { display: flex; gap: 4px; padding: 0 26px; background: var(--card);
+        border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tab { border: none; background: none; cursor: pointer; padding: 11px 15px;
+       font-size: 14px; color: var(--ink-soft); border-bottom: 2px solid transparent;
+       white-space: nowrap; font-family: inherit; }
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+
+.panel { padding: 22px 26px 60px; max-width: 1180px; }
+.hidden { display: none; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+        padding: 20px; margin-bottom: 18px; }
+.card h2 { margin: 0 0 6px; font-size: 16px; }
+.card h3 { margin: 18px 0 8px; font-size: 13px; color: var(--ink-soft);
+           text-transform: uppercase; letter-spacing: 0.05em; }
+.hint { color: var(--ink-soft); font-size: 13.5px; margin: 0 0 14px; max-width: 80ch; }
+.hint strong { color: var(--ink); }
+.small-print { font-size: 12.5px; margin-top: -4px; }
+
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+button { font-family: inherit; font-size: 14px; cursor: pointer; border-radius: 7px;
+         padding: 8px 15px; border: 1px solid transparent; }
+.primary { background: var(--blue); color: white; }
+.primary:hover { background: var(--blue-dark); }
+.primary:disabled { background: #a9bbe4; cursor: default; }
+.primary.alt { background: var(--green); }
+.primary.alt:hover { background: #155f3a; }
+.primary.alt:disabled { background: #9ecdb4; }
+.ghost { background: white; color: var(--ink); border-color: var(--line); }
+.ghost:hover { background: var(--grey-bg); }
+.status { color: var(--ink-soft); font-size: 13px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th { text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--line);
+     color: var(--ink-soft); font-size: 12px; text-transform: uppercase;
+     letter-spacing: 0.04em; font-weight: 600; white-space: nowrap; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover { background: var(--grey-bg); }
+.number { text-align: right; font-variant-numeric: tabular-nums; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+             gap: 10px; margin: 14px 0; }
+.stat { background: var(--grey-bg); border-radius: 8px; padding: 11px 13px; }
+.stat.good { background: var(--green-bg); }
+.stat.bad { background: var(--red-bg); }
+.stat-value { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.stat-label { font-size: 11.5px; color: var(--ink-soft); text-transform: uppercase;
+              letter-spacing: 0.04em; margin-top: 1px; }
+
+.step { border-left: 3px solid var(--line); padding: 8px 12px; margin: 8px 0;
+        background: var(--grey-bg); border-radius: 0 6px 6px 0; font-size: 13.5px; }
+.step-edit { border-left-color: var(--blue); background: #f2f6fd; }
+.step-explore { border-left-color: var(--ink-soft); }
+.step-error, .step-give_up { border-left-color: var(--amber); background: var(--amber-bg); }
+.step-head { font-weight: 600; font-size: 12.5px; color: var(--ink-soft);
+             text-transform: uppercase; letter-spacing: 0.04em; }
+.step-thinking { font-style: italic; margin: 4px 0; }
+.refused { color: var(--red); font-size: 12.5px; }
+.applied { color: var(--green); font-size: 12.5px; }
+
+.verdict-line { font-size: 13px; margin: 3px 0; font-family: ui-monospace, Menlo, monospace; }
+.verdict-ok { color: var(--green); }
+.verdict-fail { color: var(--red); font-weight: 600; }
+
+pre.diff, pre.report {
+  background: var(--code-bg); color: var(--code-ink); padding: 14px;
+  border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.5; margin: 0;
+}
+pre.diff .add { color: #86e29b; }
+details { margin: 10px 0; }
+summary { cursor: pointer; font-size: 13.5px; color: var(--blue); padding: 5px 0;
+          user-select: none; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em;
+       background: var(--grey-bg); padding: 1px 5px; border-radius: 4px; }
+.empty { color: var(--ink-soft); font-size: 13.5px; padding: 12px 0; }
+.error-text { color: var(--red); font-size: 13.5px; }
+.issue-text { white-space: pre-wrap; font-size: 13px; color: var(--ink-soft);
+              background: var(--grey-bg); padding: 10px 12px; border-radius: 7px; }
+.progress-bar { height: 6px; background: var(--grey-bg); border-radius: 3px;
+                overflow: hidden; margin: 10px 0; }
+.progress-fill { height: 100%; background: var(--blue); transition: width 0.3s; }

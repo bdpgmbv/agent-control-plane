@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Coding Agent</title>
+<link rel="stylesheet" href="/ui/style.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>AI Coding Agent</h1>
+    <p class="subtitle">issue &rarr; explore &rarr; edit &rarr; test &rarr; verify</p>
+  </div>
+  <div class="header-right">
+    <span id="mode-badge" class="badge badge-grey">checking&hellip;</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="run">Run</button>
+  <button class="tab" data-tab="tasks">The bugs</button>
+  <button class="tab" data-tab="about">How it is kept honest</button>
+</nav>
+
+<!-- ================= RUN ================= -->
+<section id="tab-run" class="panel">
+  <div class="card">
+    <h2>Fix the seeded bugs</h2>
+    <p class="hint">
+      Each task copies the repository, introduces one real bug, and hands the
+      agent the failing test and a ticket. A patch is only accepted if the target
+      test passes, nothing that passed before now fails, <strong>no test file was
+      touched</strong>, and something in the source actually changed.
+    </p>
+    <div class="row">
+      <button id="run-offline" class="primary">Run offline (recorded plans)</button>
+      <button id="run-live" class="primary alt">Run live (real model)</button>
+      <span id="run-status" class="status"></span>
+    </div>
+    <p class="hint small-print">
+      Offline replays prepared replies. It exercises the sandbox, the edit
+      applier, the test runner and the verifier &ndash; but not the model's
+      reasoning. Only the live column says anything about the agent.
+    </p>
+    <div id="progress"></div>
+  </div>
+
+  <div id="summary-area"></div>
+  <div id="results-area"></div>
+</section>
+
+<!-- ================= TASKS ================= -->
+<section id="tab-tasks" class="panel hidden">
+  <div class="card">
+    <h2>The eight bugs</h2>
+    <p class="hint">
+      Every one of these is a mistake that has been shipped by somebody. The fix
+      is not stored anywhere &ndash; the benchmark says only how to break the code
+      and which test should then fail, so the agent is graded on whether the suite
+      goes green, never on whether it wrote the lines a person would have.
+    </p>
+    <div id="task-list"></div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="tab-about" class="panel hidden">
+  <div class="card">
+    <h2>The check that matters</h2>
+    <p class="hint">
+      An agent that cannot work out why <code>total_with_tax(100) == 120</code>
+      fails has an obvious alternative: change the 120. The suite goes green, the
+      exit code is zero, and every metric built on &ldquo;did the tests
+      pass&rdquo; reports success. Ask the model what it did and it will say it
+      corrected the expected value &ndash; a true description of the edit and a
+      false description of the work.
+    </p>
+    <p class="hint">
+      So the test files are hashed before the agent starts and again at the end.
+      If any hash moved, the patch is rejected however green the run was. The
+      rule is enforced twice on purpose: layer 6 refuses the edit at the door,
+      and layer 8 checks the room afterwards and does not care how anything got
+      in.
+    </p>
+
+    <h2>What stops the loop</h2>
+    <p class="hint">
+      Two facts, neither of which is persuadable: the exit code of the test run,
+      and arithmetic on the budget. Not the agent's opinion about whether it is
+      finished. An agent asked &ldquo;are you done?&rdquo; will eventually say
+      yes whether or not it is.
+    </p>
+
+    <h2>What this sandbox is, honestly</h2>
+    <p class="hint">
+      A blast-radius limiter, not a security boundary. It stops the agent editing
+      files outside its working copy, and it stops a bad patch damaging the
+      original repository. It does <strong>not</strong> contain code the agent
+      causes to <em>run</em> &ndash; the test suite executes as an ordinary
+      subprocess with the same permissions this process has. Genuinely untrusted
+      code needs a container. Saying &ldquo;sandbox&rdquo; and meaning
+      &ldquo;I checked the paths&rdquo; is how people end up believing they have a
+      boundary they do not have.
+    </p>
+    <div id="gate-values"></div>
+  </div>
+</section>
+
+<script src="/ui/app.js"></script>
+</body>
+</html>
