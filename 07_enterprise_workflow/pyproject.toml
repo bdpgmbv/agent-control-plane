@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "enterprise-workflow"
+version = "1.0.0"
+description = "Durable multi-agent workflow engine: survives being killed, resumes exactly once"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "python-multipart==0.0.20",
+    "pydantic==2.10.4",
+    "python-dotenv==1.0.1",
+    "openai==1.59.6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.4", "ruff==0.8.4", "mypy==1.14.0", "httpx==0.28.1"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.sql", "*.ini", "*.txt", "*.md"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+# C4 (comprehensions) is deliberately NOT enabled: this codebase uses explicit
+# loops on purpose so it can be read by someone learning the system.
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = [
+    "E501",   # line length is handled by the formatter, not enforced here
+    "B008",   # FastAPI's Depends() in a default argument is the documented idiom
+
+    # UP031 wants f-strings instead of "%s" % value. This codebase uses percent
+    # formatting consistently across the whole series, and that consistency is
+    # worth more than the modernisation. A stated decision, not a backlog.
+    "UP031",
+]
+
+# tests/conftest.py sets environment variables BEFORE importing any app module,
+# because settings are read at import time. That is the whole point of the file.
+[tool.ruff.lint.per-file-ignores]
+"tests/conftest.py" = ["E402"]
+# crash_test.py computes PROJECT_ROOT before importing the package, because it
+# needs the path to hand to the worker subprocesses it spawns.
+"scripts/crash_test.py" = ["E402"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src"]
+ignore_missing_imports = true
+check_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q --tb=short"

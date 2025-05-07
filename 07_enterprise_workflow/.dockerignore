@@ -1,0 +1,22 @@
+# Anything the image must never contain.
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+data/
+workspaces/
+eval_results/
+*.db
+*.sqlite3
+.git/
+.github/
+tests/
+scripts/
+.DS_Store
