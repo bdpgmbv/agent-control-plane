@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enterprise Workflow</title>
+<link rel="stylesheet" href="/ui/style.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Enterprise Workflow</h1>
+    <p class="subtitle">durable state &middot; resumable &middot; human approval &middot; compensation</p>
+  </div>
+  <div class="header-right">
+    <span id="mode-badge" class="badge badge-grey">checking&hellip;</span>
+    <span id="worker-badge" class="badge badge-grey">&ndash;</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="start">Start a run</button>
+  <button class="tab" data-tab="runs">Runs</button>
+  <button class="tab" data-tab="approvals">Waiting for you</button>
+  <button class="tab" data-tab="about">How it survives</button>
+</nav>
+
+<!-- ================= START ================= -->
+<section id="tab-start" class="panel">
+  <div class="card">
+    <h2>Onboard somebody</h2>
+    <p class="hint">
+      Eight steps. Three of them call systems that can fail, and one of them
+      &ndash; payroll &ndash; is the kind where doing it twice means paying
+      somebody twice. Use the switches to break things on purpose and watch what
+      the engine does about it.
+    </p>
+
+    <label class="field-label" for="request-text">The hiring request, as a manager would write it</label>
+    <textarea id="request-text" rows="6"></textarea>
+
+    <h3>Break something</h3>
+    <div class="switches">
+      <label><input type="checkbox" id="fail-licences"> the licence vendor fails twice <span class="muted">(recovers by retrying)</span></label>
+      <label><input type="checkbox" id="fail-payroll"> payroll never works <span class="muted">(forces the run to be undone)</span></label>
+      <label><input type="checkbox" id="expensive"> expensive equipment <span class="muted">(parks the run for a human)</span></label>
+      <label><input type="checkbox" id="bad-date"> a start date in the past <span class="muted">(fails permanently, no retries)</span></label>
+    </div>
+
+    <div class="row">
+      <button id="start-run" class="primary">Start the workflow</button>
+      <button id="reset-all" class="ghost">Clear everything</button>
+      <span id="start-status" class="status"></span>
+    </div>
+  </div>
+
+  <div id="detail-area"></div>
+</section>
+
+<!-- ================= RUNS ================= -->
+<section id="tab-runs" class="panel hidden">
+  <div class="card">
+    <h2>Every run</h2>
+    <button id="refresh-runs" class="ghost">Refresh</button>
+    <div id="runs-list"></div>
+  </div>
+  <div id="runs-detail"></div>
+</section>
+
+<!-- ================= APPROVALS ================= -->
+<section id="tab-approvals" class="panel hidden">
+  <div class="card">
+    <h2>Waiting for a person</h2>
+    <p class="hint">
+      A run parked here may sit for days. That is the reason its state is in a
+      database rather than in a running process &ndash; nothing has to stay alive
+      while it waits.
+    </p>
+    <button id="refresh-approvals" class="ghost">Refresh</button>
+    <div id="approvals-list"></div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="tab-about" class="panel hidden">
+  <div class="card">
+    <h2>The thing that cannot be made atomic</h2>
+    <p class="hint">
+      Three steps here each do two things that must both happen or neither: they
+      call an outside system, and they write down that they called it. There is
+      no way to make those atomic. Whichever order you pick, the process can die
+      in the gap &ndash; leaving either an account nobody recorded, or a record
+      of an account that was never made.
+    </p>
+    <p class="hint">
+      You do not fix this by being careful. You fix it by making the
+      <strong>second call harmless</strong>: hand the outside system a key it
+      recognises, so asking twice produces one account and returns the same id
+      both times. Our own record then becomes an optimisation rather than the
+      guarantee.
+    </p>
+
+    <h2>Why there is no loop over the steps</h2>
+    <p class="hint">
+      The obvious way to write this is a <code>for</code> loop that keeps the
+      position in a variable. That works until the process stops existing. So
+      there is no position variable: the engine asks the database for one
+      claimable step, does it, and returns. The sequence lives in a column, which
+      means it survives the process &ndash; and it means two workers can run with
+      no coordination beyond the claim.
+    </p>
+
+    <h2>Compensation is not a rollback</h2>
+    <p class="hint">
+      When a run fails after creating things, they are undone in reverse order:
+      the licences are attached to the account, so releasing them has to happen
+      before the account is deleted. And it leaves the world in an
+      <em>acceptable</em> state, not the original one &ndash; the account existed
+      for four minutes and that is in the vendor's audit log for seven years.
+      <strong>Sending the welcome email is the last step</strong> precisely
+      because nothing can unsend it.
+    </p>
+    <div id="settings-table"></div>
+  </div>
+</section>
+
+<script src="/ui/app.js"></script>
+</body>
+</html>
