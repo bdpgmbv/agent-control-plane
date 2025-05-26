@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Gateway</title>
+<link rel="stylesheet" href="/ui/style.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>LLM Gateway</h1>
+    <p class="subtitle">one door &middot; routing &middot; fallback &middot; cache &middot; limits &middot; cost &middot; A/B</p>
+  </div>
+  <div class="header-right">
+    <span id="mode-badge" class="badge badge-grey">checking&hellip;</span>
+    <span id="cache-badge" class="badge badge-grey">&ndash;</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="dashboard">Dashboard</button>
+  <button class="tab" data-tab="try">Send a request</button>
+  <button class="tab" data-tab="experiments">A/B</button>
+  <button class="tab" data-tab="traces">Traces</button>
+  <button class="tab" data-tab="about">How it decides</button>
+</nav>
+
+<!-- ================= DASHBOARD ================= -->
+<section id="tab-dashboard" class="panel">
+  <div class="card">
+    <h2>The last 24 hours</h2>
+    <div class="row">
+      <button id="refresh-dashboard" class="ghost">Refresh</button>
+      <button id="reset-all" class="ghost">Clear everything</button>
+    </div>
+    <div id="dashboard-stats"></div>
+    <div class="two-column">
+      <div><h3>By model</h3><div id="by-model"></div></div>
+      <div><h3>By key</h3><div id="by-owner"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRY ================= -->
+<section id="tab-try" class="panel hidden">
+  <div class="card">
+    <h2>Send something through it</h2>
+    <p class="hint">
+      Ask the same thing twice and the second one is free. Break the first model
+      and watch the request fall through to the next one &ndash; and then look at
+      the trace, which records the attempt that failed as well as the one
+      that worked.
+    </p>
+
+    <label class="field-label" for="prompt">Prompt</label>
+    <textarea id="prompt" rows="3">A box holds 12 pencils. Each pencil costs 3. How much does the whole box cost altogether?</textarea>
+
+    <div class="row">
+      <label>task
+        <select id="task">
+          <option value="general">general (cheap first)</option>
+          <option value="reasoning">reasoning (strong first)</option>
+          <option value="live">live (real models, offline as last resort)</option>
+        </select>
+      </label>
+      <label>key
+        <select id="api-key">
+          <option value="demo-key">demo-key</option>
+          <option value="team-key">team-key</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="no-cache"> skip the cache</label>
+    </div>
+
+    <div class="row">
+      <button id="send" class="primary">Send</button>
+      <button id="send-ten" class="ghost">Send 10 (to see the limits bite)</button>
+      <span id="send-status" class="status"></span>
+    </div>
+    <div id="send-result"></div>
+  </div>
+</section>
+
+<!-- ================= EXPERIMENTS ================= -->
+<section id="tab-experiments" class="panel hidden">
+  <div class="card">
+    <h2>Is the new prompt actually better?</h2>
+    <p class="hint">
+      Two prompts, the same questions, and an honest answer about whether the
+      difference means anything. Send a few dozen requests and the platform will
+      tell you it cannot tell yet &ndash; which is the point. Keep going and it
+      will name a winner, with the interval it is confident about.
+    </p>
+
+    <div class="row">
+      <button id="make-experiment" class="ghost">Create the prompt-style experiment</button>
+      <button id="simulate-40" class="primary">Send 40</button>
+      <button id="simulate-200" class="primary">Send 200</button>
+      <button id="simulate-600" class="primary">Send 600</button>
+      <span id="experiment-status" class="status"></span>
+    </div>
+
+    <div id="experiment-results"></div>
+  </div>
+</section>
+
+<!-- ================= TRACES ================= -->
+<section id="tab-traces" class="panel hidden">
+  <div class="card">
+    <h2>Every request, including the ones that failed</h2>
+    <button id="refresh-traces" class="ghost">Refresh</button>
+    <div id="traces-list"></div>
+  </div>
+  <div id="trace-detail"></div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="tab-about" class="panel hidden">
+  <div class="card">
+    <h2>An A/B result without an interval is a coin flip with extra steps</h2>
+    <p class="hint">
+      Variant A got 62% right and variant B got 71%. With twenty requests each,
+      &ldquo;B had an easier sample&rdquo; is overwhelmingly the more likely
+      explanation &ndash; and a platform that prints <em>B wins</em> has told you
+      nothing while sounding like it told you something.
+    </p>
+    <p class="hint">
+      So this one reports an interval rather than a verdict, and refuses to name
+      a winner until the interval excludes zero. When it cannot tell, it says how
+      many more samples would settle it. <strong>&ldquo;Not yet&rdquo; is a
+      result.</strong>
+    </p>
+
+    <h2>Retrying and falling back are different questions</h2>
+    <p class="hint">
+      Retrying asks &ldquo;was that just bad luck?&rdquo;. Falling back asks
+      &ldquo;is this provider usable at all?&rdquo;. A rate limit is worth both.
+      A malformed request is worth neither &ndash; it will be just as malformed
+      at the next provider, and trying anyway turns one clear error into three
+      slow ones.
+    </p>
+
+    <h2>The scope is part of the cache key</h2>
+    <p class="hint">
+      Project 01 in this series shipped a semantic cache that served one user's
+      answer to another, because the similarity search found the nearest entry
+      first and the permission check came second. A check that comes after the
+      match is one somebody will eventually move. Here the scope is in the key
+      and in the candidate query, so there is no code path that can find an
+      entry from another scope at all.
+    </p>
+
+    <h2>Why percentiles, not averages</h2>
+    <p class="hint">
+      A mean latency of two seconds could be everything taking two seconds, or
+      95% taking half a second and one request in twenty taking thirty. Only one
+      of those is a problem and the mean cannot tell you which you have.
+    </p>
+    <div id="settings-table"></div>
+  </div>
+</section>
+
+<script src="/ui/app.js"></script>
+</body>
+</html>
